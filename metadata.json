@@ -1,0 +1,6 @@
+{
+  "name": "PromptVerse",
+  "description": "Explore and copy premium AI image prompts for Midjourney, DALL-E, Stable Diffusion, and Flux with high-resolution visual previews.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
