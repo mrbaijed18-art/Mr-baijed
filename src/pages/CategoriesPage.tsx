@@ -81,14 +81,14 @@ export const CategoriesPage: React.FC = () => {
     <div className="w-full min-h-screen max-w-7xl mx-auto px-4 sm:px-6 py-6 md:py-10">
       {/* Header */}
       <div className="mb-8">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-2">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 mb-2">
           <Layers className="w-3.5 h-3.5" />
           <span>Curated Disciplines</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-neutral-900 dark:text-white tracking-tight">
           Browse Categories
         </h1>
-        <p className="text-sm text-neutral-400 mt-1 max-w-xl">
+        <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 max-w-xl">
           Explore specialized AI styles, from cinematic anamorphic frames to 3D isometric diorama prompts.
         </p>
       </div>
@@ -99,12 +99,12 @@ export const CategoriesPage: React.FC = () => {
           {Array.from({ length: 12 }).map((_, i) => (
             <div
               key={i}
-              className="h-44 rounded-3xl bg-neutral-900/60 border border-neutral-800 animate-pulse p-5 flex flex-col justify-between"
+              className="h-44 rounded-3xl bg-neutral-100 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 animate-pulse p-5 flex flex-col justify-between"
             >
-              <div className="w-12 h-12 rounded-2xl bg-neutral-800" />
+              <div className="w-12 h-12 rounded-2xl bg-neutral-200 dark:bg-neutral-800" />
               <div className="space-y-2">
-                <div className="h-5 bg-neutral-800 rounded w-1/2" />
-                <div className="h-3 bg-neutral-800/60 rounded w-3/4" />
+                <div className="h-5 bg-neutral-200 dark:bg-neutral-800 rounded w-1/2" />
+                <div className="h-3 bg-neutral-200/60 dark:bg-neutral-800/60 rounded w-3/4" />
               </div>
             </div>
           ))}
@@ -124,7 +124,7 @@ export const CategoriesPage: React.FC = () => {
                 whileHover={{ y: -5, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleCategoryClick(cat.slug)}
-                className="group relative cursor-pointer rounded-3xl p-6 bg-gradient-to-br from-neutral-900/90 via-neutral-900/60 to-neutral-950/80 border border-neutral-800/80 hover:border-indigo-500/50 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/10 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
+                className="group relative cursor-pointer rounded-3xl p-6 bg-white dark:bg-gradient-to-br dark:from-neutral-900/90 dark:via-neutral-900/60 dark:to-neutral-950/80 border border-neutral-200/90 dark:border-neutral-800/80 hover:border-indigo-500/50 shadow-sm hover:shadow-xl dark:hover:shadow-indigo-500/10 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between overflow-hidden"
               >
                 {/* Subtle Ambient Background Light */}
                 <div className="absolute top-0 right-0 -mr-8 -mt-8 w-28 h-28 rounded-full bg-indigo-600/10 blur-2xl group-hover:bg-indigo-600/25 transition-colors pointer-events-none" />
@@ -132,27 +132,27 @@ export const CategoriesPage: React.FC = () => {
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     {/* Icon container */}
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 group-hover:scale-110 group-hover:border-indigo-400 transition-all shadow-md">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500/10 dark:from-indigo-500/20 to-purple-500/10 dark:to-purple-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 group-hover:border-indigo-400 transition-all shadow-sm">
                       <IconComponent className="w-6 h-6" />
                     </div>
                     {/* Prompt Count Pill */}
-                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-neutral-800/90 text-neutral-300 border border-neutral-700/60 group-hover:border-neutral-600">
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-neutral-100 dark:bg-neutral-800/90 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700/60 group-hover:border-neutral-300 dark:group-hover:border-neutral-600">
                       {count} {count === 1 ? 'Prompt' : 'Prompts'}
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-white group-hover:text-indigo-300 transition-colors">
+                  <h3 className="text-lg font-bold text-neutral-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
                     {cat.name}
                   </h3>
 
-                  <p className="text-xs text-neutral-400 mt-1.5 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1.5 line-clamp-2 leading-relaxed">
                     {cat.description || `Browse high-definition ${cat.name} image generation prompts.`}
                   </p>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-neutral-800/80 flex items-center justify-between text-xs font-semibold text-neutral-400 group-hover:text-white transition-colors">
+                <div className="mt-5 pt-3 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-xs font-semibold text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-950 dark:group-hover:text-white transition-colors">
                   <span>Explore Collection</span>
-                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform text-indigo-400" />
+                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform text-indigo-600 dark:text-indigo-400" />
                 </div>
               </motion.div>
             );

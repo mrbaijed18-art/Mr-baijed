@@ -19,6 +19,7 @@ import { useFavorites } from '../context/FavoritesContext';
 import { copyPromptToClipboard } from '../utils/clipboard';
 import { incrementPromptViews } from '../supabase/promptService';
 import { useRouter } from '../context/RouterContext';
+import { AdSlot } from './AdSlot';
 
 interface PromptDetailsModalProps {
   prompt: PromptItem | null;
@@ -96,13 +97,13 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ type: "spring", damping: 28, stiffness: 350 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-4xl bg-neutral-900 border border-neutral-800 rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col md:flex-row"
+          className="relative w-full max-w-4xl bg-white dark:bg-[#13141a] border border-neutral-200 dark:border-neutral-800 rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col md:flex-row transition-colors"
         >
           {/* Close Button */}
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/60 hover:bg-black text-neutral-300 hover:text-white backdrop-blur-md border border-white/10 transition-all active:scale-95"
+            className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/60 hover:bg-black text-white backdrop-blur-md border border-white/20 shadow-md transition-all active:scale-95"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -120,18 +121,18 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
             {/* Top Badges */}
             <div className="absolute top-4 left-4 flex items-center gap-2">
               {prompt.isPremium && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-black shadow-lg">
-                  <Sparkles className="w-3.5 h-3.5 fill-black" />
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-400 text-neutral-950 shadow-md">
+                  <Sparkles className="w-3.5 h-3.5 fill-neutral-950" />
                   PREMIUM
                 </span>
               )}
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-black/70 text-white backdrop-blur-md border border-white/10">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-black/70 text-white backdrop-blur-md border border-white/20">
                 {prompt.category}
               </span>
             </div>
 
             {/* Image Stats Overlay at bottom */}
-            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-neutral-300 bg-black/60 backdrop-blur-md px-3 py-2 rounded-2xl border border-white/10">
+            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-neutral-200 bg-black/60 backdrop-blur-md px-3 py-2 rounded-2xl border border-white/20">
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
                   <Heart className="w-3.5 h-3.5 text-rose-400" />
@@ -155,14 +156,14 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
               {/* Title & Category info */}
               <div>
                 <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <span className="text-xs font-semibold text-indigo-400 tracking-wider uppercase">
+                  <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 tracking-wider uppercase">
                     {prompt.category}
                   </span>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={handleShare}
-                      className="p-1.5 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+                      className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
                       title="Share prompt"
                     >
                       <Share2 className="w-4 h-4" />
@@ -170,7 +171,7 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
                     <button
                       type="button"
                       onClick={() => toggleFavorite(prompt.id, prompt.title)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-750 text-neutral-200 text-xs font-semibold transition-transform active:scale-95"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-750 text-neutral-800 dark:text-neutral-200 text-xs font-semibold transition-transform active:scale-95"
                     >
                       <Heart className={`w-4 h-4 ${favorited ? 'fill-rose-500 text-rose-500' : 'text-neutral-400'}`} />
                       <span>{favorited ? 'Saved' : 'Save'}</span>
@@ -178,7 +179,7 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
                   </div>
                 </div>
 
-                <h2 className="text-xl md:text-2xl font-extrabold text-white tracking-tight">
+                <h2 className="text-xl md:text-2xl font-extrabold text-neutral-900 dark:text-white tracking-tight">
                   {prompt.title}
                 </h2>
               </div>
@@ -186,16 +187,16 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
               {/* Prompt Text Container (The main value) */}
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                  <label className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
                     Full Prompt
                   </label>
-                  <span className="text-[11px] text-neutral-500 font-mono">
+                  <span className="text-[11px] text-neutral-400 dark:text-neutral-500 font-mono">
                     {prompt.prompt.length} chars
                   </span>
                 </div>
 
-                <div className="relative rounded-2xl bg-neutral-950 border border-neutral-800 p-4 font-mono text-xs sm:text-sm text-neutral-200 leading-relaxed shadow-inner max-h-48 overflow-y-auto selection:bg-indigo-500">
+                <div className="relative rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 p-4 font-mono text-xs sm:text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed shadow-inner max-h-48 overflow-y-auto selection:bg-indigo-500">
                   {prompt.prompt}
                 </div>
               </div>
@@ -204,10 +205,10 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
               <button
                 type="button"
                 onClick={handleCopy}
-                className={`w-full py-3.5 px-6 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-xl transition-all duration-200 active:scale-98 ${
+                className={`w-full py-3.5 px-6 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg transition-all duration-200 active:scale-98 ${
                   copied
                     ? 'bg-emerald-500 text-white shadow-emerald-500/20'
-                    : 'bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5'
+                    : 'bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5'
                 }`}
               >
                 {copied ? (
@@ -225,20 +226,20 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
 
               {/* Prompt Metadata Grid */}
               <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="p-3 rounded-xl bg-neutral-950/60 border border-neutral-800/80">
-                  <span className="text-[10px] text-neutral-500 flex items-center gap-1 mb-0.5">
-                    <Cpu className="w-3 h-3 text-indigo-400" /> AI Engine
+                <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800/80">
+                  <span className="text-[10px] text-neutral-500 dark:text-neutral-400 flex items-center gap-1 mb-0.5">
+                    <Cpu className="w-3 h-3 text-indigo-500 dark:text-indigo-400" /> AI Engine
                   </span>
-                  <span className="text-xs font-semibold text-neutral-200">
+                  <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
                     {prompt.modelUsed || 'Midjourney / Flux'}
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-neutral-950/60 border border-neutral-800/80">
-                  <span className="text-[10px] text-neutral-500 flex items-center gap-1 mb-0.5">
-                    <Calendar className="w-3 h-3 text-indigo-400" /> Date Added
+                <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800/80">
+                  <span className="text-[10px] text-neutral-500 dark:text-neutral-400 flex items-center gap-1 mb-0.5">
+                    <Calendar className="w-3 h-3 text-indigo-500 dark:text-indigo-400" /> Date Added
                   </span>
-                  <span className="text-xs font-semibold text-neutral-200">
+                  <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
                     {new Date(prompt.createdAt).toLocaleDateString(undefined, {
                       month: 'short',
                       day: 'numeric',
@@ -254,7 +255,7 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
                   {prompt.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-neutral-800/70 text-neutral-300 border border-neutral-750"
+                      className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-neutral-100 dark:bg-neutral-800/70 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-750"
                     >
                       #{tag}
                     </span>
@@ -262,10 +263,13 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
                 </div>
               )}
 
+              {/* Sponsored Modal Ad (if active) */}
+              <AdSlot placement="prompt_modal" />
+
               {/* Related Prompts Preview */}
               {relatedPrompts.length > 0 && (
-                <div className="pt-4 border-t border-neutral-800">
-                  <h4 className="text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2.5">
+                <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800">
+                  <h4 className="text-xs font-bold text-neutral-800 dark:text-neutral-300 uppercase tracking-wider mb-2.5">
                     More in {prompt.category}
                   </h4>
                   <div className="grid grid-cols-3 gap-2">
@@ -275,7 +279,7 @@ export const PromptDetailsModal: React.FC<PromptDetailsModalProps> = ({
                         onClick={() => {
                           if (onSelectPrompt) onSelectPrompt(rel);
                         }}
-                        className="group/rel cursor-pointer rounded-xl overflow-hidden aspect-square relative bg-neutral-950 border border-neutral-800 hover:border-indigo-500 transition-all"
+                        className="group/rel cursor-pointer rounded-xl overflow-hidden aspect-square relative bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 hover:border-indigo-500 transition-all"
                       >
                         <img
                           src={rel.imageUrl}

@@ -4,11 +4,10 @@ import { siteConfig } from '../config/siteConfig';
 
 const LOCAL_USER_KEY = 'promptverse_current_user';
 
-export const EXCLUSIVE_ADMIN_EMAIL = 'mrbaijed18@gmail.com';
-
 export function isEmailConfiguredAdmin(email?: string | null): boolean {
   if (!email) return false;
-  return email.toLowerCase().trim() === EXCLUSIVE_ADMIN_EMAIL;
+  const adminEmails = siteConfig.ADMIN_CONFIGURATION.adminEmails || [];
+  return adminEmails.some(e => e.toLowerCase().trim() === email.toLowerCase().trim());
 }
 
 function getLocalStoredUser(): UserProfile | null {
@@ -38,7 +37,6 @@ function setLocalStoredUser(user: UserProfile | null): void {
 export async function signInEmail(email: string, pass: string): Promise<UserProfile> {
   const client = getSupabaseClient();
   const trimmedEmail = email.trim().toLowerCase();
-  const isAdminAttempt = trimmedEmail === EXCLUSIVE_ADMIN_EMAIL;
 
   if (isSupabaseConfigured() && client) {
     const { data, error } = await client.auth.signInWithPassword({
@@ -51,14 +49,29 @@ export async function signInEmail(email: string, pass: string): Promise<UserProf
     }
 
     const user = data.user;
-    const isVerifiedAdmin = user.email?.toLowerCase().trim() === EXCLUSIVE_ADMIN_EMAIL;
+    let role: 'admin' | 'user' = (user.user_metadata?.role === 'admin' || user.app_metadata?.role === 'admin') ? 'admin' : 'user';
+    let displayName = user.user_metadata?.display_name || user.email?.split('@')[0] || 'Creator';
+    let photoURL = user.user_metadata?.avatar_url || null;
+
+    try {
+      const { data: pData } = await client.from('profiles').select('role, display_name, photo_url').eq('id', user.id).maybeSingle();
+      if (pData?.role === 'admin') role = 'admin';
+      if (pData?.display_name) displayName = pData.display_name;
+      if (pData?.photo_url) photoURL = pData.photo_url;
+    } catch {
+      // Continue with session data
+    }
+
+    if (isEmailConfiguredAdmin(user.email)) {
+      role = 'admin';
+    }
 
     const profile: UserProfile = {
       uid: user.id,
       email: user.email || trimmedEmail,
-      displayName: user.user_metadata?.display_name || (isVerifiedAdmin ? 'Admin Baijed' : user.email?.split('@')[0]) || 'Creator',
-      photoURL: user.user_metadata?.avatar_url || null,
-      role: isVerifiedAdmin ? 'admin' : 'user',
+      displayName,
+      photoURL,
+      role,
       createdAt: user.created_at || new Date().toISOString(),
     };
 
@@ -66,34 +79,7 @@ export async function signInEmail(email: string, pass: string): Promise<UserProf
     return profile;
   }
 
-  // Local fallback if Supabase is offline - ONLY allows admin if exact password matches
-  if (isAdminAttempt) {
-    if (pass !== 'baijed@12345') {
-      throw new Error('Invalid email or password.');
-    }
-    const adminUser: UserProfile = {
-      uid: 'admin_baijed_id',
-      email: EXCLUSIVE_ADMIN_EMAIL,
-      displayName: 'Admin Baijed',
-      photoURL: null,
-      role: 'admin',
-      createdAt: new Date().toISOString(),
-    };
-    setLocalStoredUser(adminUser);
-    return adminUser;
-  }
-
-  const fallbackUser: UserProfile = {
-    uid: `user_${Date.now()}`,
-    email: trimmedEmail,
-    displayName: trimmedEmail.split('@')[0],
-    photoURL: null,
-    role: 'user',
-    createdAt: new Date().toISOString(),
-  };
-
-  setLocalStoredUser(fallbackUser);
-  return fallbackUser;
+  throw new Error('Database authentication service is currently not connected.');
 }
 
 /**
@@ -132,18 +118,7 @@ export async function signUpEmail(email: string, pass: string, name?: string): P
     return profile;
   }
 
-  // Local fallback
-  const fallbackUser: UserProfile = {
-    uid: `user_${Date.now()}`,
-    email,
-    displayName: name || email.split('@')[0],
-    photoURL: null,
-    role: isAdmin ? 'admin' : 'user',
-    createdAt: new Date().toISOString(),
-  };
-
-  setLocalStoredUser(fallbackUser);
-  return fallbackUser;
+  throw new Error('Database authentication service is currently not connected.');
 }
 
 /**
@@ -207,13 +182,29 @@ export function onAuthChanged(
     const { data: authListener } = client.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         const u = session.user;
-        const isAdmin = isEmailConfiguredAdmin(u.email);
+        let role: 'admin' | 'user' = (u.user_metadata?.role === 'admin' || u.app_metadata?.role === 'admin') ? 'admin' : 'user';
+        let displayName = u.user_metadata?.display_name || u.email?.split('@')[0] || 'Creator';
+        let photoURL = u.user_metadata?.avatar_url || null;
+
+        try {
+          const { data: pData } = await client.from('profiles').select('role, display_name, photo_url').eq('id', u.id).maybeSingle();
+          if (pData?.role === 'admin') role = 'admin';
+          if (pData?.display_name) displayName = pData.display_name;
+          if (pData?.photo_url) photoURL = pData.photo_url;
+        } catch {
+          // ignore
+        }
+
+        if (isEmailConfiguredAdmin(u.email)) {
+          role = 'admin';
+        }
+
         const prof: UserProfile = {
           uid: u.id,
           email: u.email || null,
-          displayName: u.user_metadata?.display_name || u.email?.split('@')[0] || 'Creator',
-          photoURL: u.user_metadata?.avatar_url || null,
-          role: isAdmin ? 'admin' : 'user',
+          displayName,
+          photoURL,
+          role,
           createdAt: u.created_at || new Date().toISOString(),
         };
         setLocalStoredUser(prof);

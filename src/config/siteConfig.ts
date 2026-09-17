@@ -14,9 +14,7 @@ export const siteConfig = {
   // Add any email addresses here that should automatically have full Admin privileges.
   // In Firebase, admins can also be designated via the 'admins/{uid}' collection or Firestore security rules.
   ADMIN_CONFIGURATION: {
-    adminEmails: [
-      "mrbaijed18@gmail.com"
-    ],
+    adminEmails: [] as string[],
     roles: {
       ADMIN: "admin",
       USER: "user"

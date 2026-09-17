@@ -22,7 +22,22 @@ export function saveLocalPrompts(prompts: PromptItem[]): void {
   try {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(prompts));
   } catch (err) {
-    console.error('Failed to save to local storage', err);
+    console.warn('Failed to save to local storage (quota limit?), pruning heavy payloads:', err);
+    try {
+      // If quota exceeded, strip any massive base64 strings from cached items
+      const pruned = prompts.map(p => {
+        if (p.imageUrl && p.imageUrl.startsWith('data:') && p.imageUrl.length > 50000) {
+          return {
+            ...p,
+            imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80'
+          };
+        }
+        return p;
+      });
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(pruned));
+    } catch {
+      // Ignored
+    }
   }
 }
 
@@ -43,9 +58,9 @@ function mapRowToPrompt(row: any): PromptItem {
     views: Number(row.views) || 0,
     createdAt: row.created_at || row.createdAt || new Date().toISOString(),
     updatedAt: row.updated_at || row.updatedAt || new Date().toISOString(),
-    modelUsed: row.model_used || row.modelUsed || 'Midjourney v6',
-    aspectRatio: row.aspect_ratio || row.aspectRatio || '1:1',
-    authorName: row.author_name || row.authorName || 'PromptVerse AI',
+    modelUsed: row.model_used || row.modelUsed || 'Midjourney v6.1',
+    aspectRatio: row.aspect_ratio || row.aspectRatio || '4:5',
+    authorName: row.author_name || row.authorName || 'PromptVerse Admin',
   };
 }
 
@@ -64,9 +79,9 @@ function mapPromptToRow(item: PromptItem): any {
     likes: item.likes ?? 0,
     copies: item.copies ?? 0,
     views: item.views ?? 0,
-    model_used: item.modelUsed,
-    aspect_ratio: item.aspectRatio,
-    author_name: item.authorName,
+    model_used: item.modelUsed || 'Midjourney v6.1',
+    aspect_ratio: item.aspectRatio || '4:5',
+    author_name: item.authorName || 'PromptVerse Admin',
     created_at: item.createdAt || new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -98,12 +113,18 @@ export async function getPrompts(isAdminView = false): Promise<PromptItem[]> {
       return isAdminView ? local : local.filter(p => p.status === 'published');
     }
 
+    const local = getLocalPrompts();
     if (!data || data.length === 0) {
-      // If table is newly created and empty, return local prompts and offer auto-seed
-      return getLocalPrompts();
+      return isAdminView ? local : local.filter(p => p.status === 'published');
     }
 
-    return data.map(mapRowToPrompt);
+    // Merge Supabase prompts with any locally created prompts that haven't synced yet
+    const dbPrompts = data.map(mapRowToPrompt);
+    const dbIds = new Set(dbPrompts.map(p => p.id));
+    const unsyncedLocal = local.filter(p => !dbIds.has(p.id));
+
+    const combined = [...dbPrompts, ...unsyncedLocal];
+    return isAdminView ? combined : combined.filter(p => p.status === 'published');
   } catch (err) {
     console.error('Failed to fetch from Supabase:', err);
     return getLocalPrompts();
@@ -137,35 +158,59 @@ export async function getPromptById(id: string): Promise<PromptItem | null> {
 }
 
 /**
- * Create a new prompt in Supabase
+ * Create a new prompt in Supabase (and local storage)
+ * Guarantees unique ID and safe persistent storage
  */
-export async function createPrompt(prompt: PromptItem): Promise<PromptItem> {
-  // Always update local cache first
+export async function createPrompt(prompt: Partial<PromptItem>): Promise<PromptItem> {
+  const now = new Date().toISOString();
+  const promptId = prompt.id || `prompt_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+
+  const fullPrompt: PromptItem = {
+    id: promptId,
+    title: prompt.title || 'Untitled Prompt',
+    prompt: prompt.prompt || '',
+    imageUrl: prompt.imageUrl || '',
+    category: prompt.category || 'General',
+    tags: Array.isArray(prompt.tags) ? prompt.tags : [],
+    isPremium: Boolean(prompt.isPremium),
+    isFeatured: Boolean(prompt.isFeatured),
+    status: prompt.status || 'published',
+    likes: Number(prompt.likes) || 0,
+    copies: Number(prompt.copies) || 0,
+    views: Number(prompt.views) || 0,
+    createdAt: prompt.createdAt || now,
+    updatedAt: now,
+    modelUsed: prompt.modelUsed || 'Midjourney v6.1',
+    aspectRatio: prompt.aspectRatio || '4:5',
+    authorName: prompt.authorName || 'PromptVerse Admin',
+  };
+
+  // Always update local cache immediately so it shows instantly
   const local = getLocalPrompts();
-  const existingIdx = local.findIndex(p => p.id === prompt.id);
+  const existingIdx = local.findIndex(p => p.id === promptId);
   const updatedLocal = existingIdx >= 0 
-    ? local.map(p => p.id === prompt.id ? prompt : p)
-    : [prompt, ...local];
+    ? local.map(p => p.id === promptId ? fullPrompt : p)
+    : [fullPrompt, ...local];
   saveLocalPrompts(updatedLocal);
 
   const client = getSupabaseClient();
   if (!isSupabaseConfigured() || !client) {
-    return prompt;
+    return fullPrompt;
   }
 
   try {
-    const row = mapPromptToRow(prompt);
+    const row = mapPromptToRow(fullPrompt);
     const { data, error } = await client.from('prompts').upsert(row).select().single();
 
     if (error) {
       console.error('Failed to create prompt in Supabase:', error.message);
-      return prompt;
+      return fullPrompt;
     }
 
-    return data ? mapRowToPrompt(data) : prompt;
+    return data ? mapRowToPrompt(data) : fullPrompt;
   } catch (err) {
     console.error('Supabase createPrompt error:', err);
-    return prompt;
+    return fullPrompt;
   }
 }
 

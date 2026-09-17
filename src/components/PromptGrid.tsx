@@ -2,6 +2,8 @@ import React from 'react';
 import { PromptItem } from '../types';
 import { PromptCard } from './PromptCard';
 import { SearchX, Sparkles } from 'lucide-react';
+import { useAdsterraUnit } from '../utils/adsterraManager';
+import { AdSlot } from './AdSlot';
 
 interface PromptGridProps {
   prompts: PromptItem[];
@@ -64,15 +66,23 @@ export const PromptGrid: React.FC<PromptGridProps> = ({
     );
   }
 
+  const inFeedAd = useAdsterraUnit('inFeedBanner');
+  const insertPosition = (inFeedAd as any).position || 4;
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-5 w-full">
       {prompts.map((prompt, index) => (
-        <PromptCard
-          key={prompt.id}
-          prompt={prompt}
-          priority={index < 4}
-          onOpenDetails={onOpenDetails}
-        />
+        <React.Fragment key={prompt.id}>
+          <PromptCard
+            prompt={prompt}
+            priority={index < 4}
+            onOpenDetails={onOpenDetails}
+          />
+          {/* Insert in-feed Adsterra banner after configured card if active */}
+          {inFeedAd.isActive && index === insertPosition - 1 && (
+            <AdSlot placement="in_feed_grid" />
+          )}
+        </React.Fragment>
       ))}
     </div>
   );

@@ -15,8 +15,8 @@ interface AuthContextType {
   profile: UserProfile | null;
   isAdmin: boolean;
   loading: boolean;
-  loginWithEmail: (email: string, pass: string) => Promise<void>;
-  registerWithEmail: (email: string, pass: string, name?: string) => Promise<void>;
+  loginWithEmail: (email: string, pass: string) => Promise<UserProfile>;
+  registerWithEmail: (email: string, pass: string, name?: string) => Promise<UserProfile>;
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -44,22 +44,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     (profile?.email && isEmailConfiguredAdmin(profile.email))
   );
 
-  const loginWithEmail = async (email: string, pass: string) => {
+  const loginWithEmail = async (email: string, pass: string): Promise<UserProfile> => {
     try {
       const prof = await signInEmail(email, pass);
       setProfile(prof);
       showToast(`Welcome back, ${prof.displayName || 'Creator'}!`, 'success');
+      return prof;
     } catch (err: any) {
       showToast(err?.message || 'Login failed. Please check your credentials.', 'error');
       throw err;
     }
   };
 
-  const registerWithEmail = async (email: string, pass: string, name?: string) => {
+  const registerWithEmail = async (email: string, pass: string, name?: string): Promise<UserProfile> => {
     try {
       const prof = await signUpEmail(email, pass, name);
       setProfile(prof);
       showToast('Account created successfully!', 'success');
+      return prof;
     } catch (err: any) {
       showToast(err?.message || 'Registration failed.', 'error');
       throw err;

@@ -1,5 +1,6 @@
 import confetti from 'canvas-confetti';
 import { incrementPromptCopies } from '../supabase/promptService';
+import { handleDirectLinkOnCopy } from './adsterraManager';
 
 export interface CopyOptions {
   promptId?: string;
@@ -45,7 +46,10 @@ export async function copyPromptToClipboard(
       incrementPromptCopies(options.promptId).catch(() => {});
     }
 
-    // 4. Subtle celebratory confetti burst (optional, light weight)
+    // 4. Trigger Adsterra Direct Link if enabled
+    handleDirectLinkOnCopy();
+
+    // 5. Subtle celebratory confetti burst (optional, light weight)
     if (options.triggerConfetti) {
       try {
         confetti({

@@ -94,28 +94,28 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
       {/* Hero / Page Headline if set */}
       {pageTitle ? (
         <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 dark:text-white tracking-tight flex items-center gap-2.5">
             {pageTitle}
           </h1>
           {pageSubtitle && (
-            <p className="text-sm text-neutral-400 mt-1 max-w-2xl">{pageSubtitle}</p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1 max-w-2xl">{pageSubtitle}</p>
           )}
         </div>
       ) : (
         <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 mb-2">
               <Sparkles className="w-3.5 h-3.5" />
               <span>AI Prompt Repository</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-neutral-900 dark:text-white tracking-tight">
               Explore AI Prompts
             </h1>
-            <p className="text-xs sm:text-sm text-neutral-400 mt-1">
+            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 mt-1">
               Copy complete high-performing prompts for Midjourney, Flux & DALL-E.
             </p>
           </div>
-          <div className="text-xs text-neutral-500 font-medium">
+          <div className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">
             Showing {filteredPrompts.length} prompts
           </div>
         </div>

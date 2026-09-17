@@ -81,3 +81,40 @@ export interface ToastMessage {
   message: string;
   duration?: number;
 }
+
+export interface AdsterraUnit {
+  enabled: boolean;
+  code: string;
+}
+
+export interface AdsterraDirectLinkConfig {
+  enabled: boolean;
+  url: string;
+  openOnCopyPrompt: boolean;
+  showNavButton: boolean;
+  navButtonText: string;
+}
+
+export interface AdsterraConfig {
+  enabled: boolean; // Master switch
+  popunder: AdsterraUnit; // Popunder OnClick script
+  socialBar: AdsterraUnit; // Social Bar / Push Notification script
+  topBanner: AdsterraUnit; // 728x90 Header / Top banner
+  inFeedBanner: AdsterraUnit & { position: number }; // 300x250 or Native Banner inside Prompt Grid
+  modalBanner: AdsterraUnit; // 300x250 Banner inside Prompt Modal
+  footerBanner: AdsterraUnit; // 728x90 or Native Banner above Footer
+  stickyBottom: AdsterraUnit; // Floating sticky bottom banner
+  directLink: AdsterraDirectLinkConfig; // Smartlink / Direct Link
+}
+
+export interface SiteSettings {
+  siteName: string;
+  siteDescription: string;
+  enableConfetti: boolean;
+  // 2026 footer badge customization
+  showFooterBadge: boolean;
+  footerBadgeImage: string; // URL or base64 data URI
+  footerBadgeAlt: string;
+  footerBadgeLink?: string;
+}
+

@@ -58,13 +58,13 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
   if (loading) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-12 animate-pulse space-y-6">
-        <div className="h-6 bg-neutral-800 rounded w-24" />
+        <div className="h-6 bg-neutral-200 dark:bg-neutral-800 rounded w-24" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="aspect-[3/4] bg-neutral-800 rounded-3xl" />
+          <div className="aspect-[3/4] bg-neutral-200 dark:bg-neutral-800 rounded-3xl" />
           <div className="space-y-4">
-            <div className="h-8 bg-neutral-800 rounded w-3/4" />
-            <div className="h-32 bg-neutral-800 rounded-2xl" />
-            <div className="h-12 bg-neutral-800 rounded-2xl" />
+            <div className="h-8 bg-neutral-200 dark:bg-neutral-800 rounded w-3/4" />
+            <div className="h-32 bg-neutral-200 dark:bg-neutral-800 rounded-2xl" />
+            <div className="h-12 bg-neutral-200 dark:bg-neutral-800 rounded-2xl" />
           </div>
         </div>
       </div>
@@ -74,12 +74,12 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
   if (!prompt) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
-        <h2 className="text-2xl font-bold text-white mb-2">Prompt Not Found</h2>
-        <p className="text-sm text-neutral-400 mb-6">This prompt may have been removed or unpublished.</p>
+        <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">Prompt Not Found</h2>
+        <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-6">This prompt may have been removed or unpublished.</p>
         <button
           type="button"
           onClick={() => navigate('/explore')}
-          className="px-5 py-2.5 rounded-full bg-indigo-600 text-white font-medium text-sm"
+          className="px-5 py-2.5 rounded-full bg-indigo-600 text-white font-medium text-sm shadow-md shadow-indigo-600/20"
         >
           Back to Explore
         </button>
@@ -129,7 +129,7 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
       <button
         type="button"
         onClick={() => navigate('/explore')}
-        className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-400 hover:text-white transition-colors mb-6 group"
+        className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors mb-6 group"
       >
         <ArrowLeft className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" />
         <span>Back to Explore</span>
@@ -139,7 +139,7 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
         {/* Left Column: Image (5 cols) */}
         <div className="lg:col-span-6 flex flex-col gap-4">
-          <div className="relative rounded-3xl overflow-hidden bg-neutral-900 border border-neutral-800 shadow-2xl">
+          <div className="relative rounded-3xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-xl">
             <img
               src={prompt.imageUrl}
               alt={prompt.title}
@@ -149,30 +149,30 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
             {/* Overlay Badges */}
             <div className="absolute top-4 left-4 flex items-center gap-2">
               {prompt.isPremium && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-black shadow-lg">
-                  <Sparkles className="w-3.5 h-3.5 fill-black" />
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-400 text-neutral-950 shadow-md">
+                  <Sparkles className="w-3.5 h-3.5 fill-neutral-950" />
                   PREMIUM
                 </span>
               )}
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-black/70 text-white backdrop-blur-md border border-white/10">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-black/70 text-white backdrop-blur-md border border-white/20">
                 {prompt.category}
               </span>
             </div>
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="flex items-center justify-between p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800 text-xs text-neutral-300">
+          <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-700 dark:text-neutral-300 shadow-xs">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1.5 font-medium">
-                <Heart className="w-4 h-4 text-rose-400" />
+                <Heart className="w-4 h-4 text-rose-500 dark:text-rose-400" />
                 {prompt.likes + (favorited ? 1 : 0)} Likes
               </span>
               <span className="flex items-center gap-1.5 font-medium">
-                <Copy className="w-4 h-4 text-indigo-400" />
+                <Copy className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
                 {prompt.copies} Copies
               </span>
               <span className="flex items-center gap-1.5 font-medium">
-                <Eye className="w-4 h-4 text-emerald-400" />
+                <Eye className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
                 {prompt.views} Views
               </span>
             </div>
@@ -180,7 +180,7 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
             <button
               type="button"
               onClick={handleShare}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
             >
               <Share2 className="w-3.5 h-3.5" />
               <span>Share</span>
@@ -193,20 +193,20 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
           <div className="space-y-6">
             <div>
               <div className="flex items-center justify-between gap-4 mb-2">
-                <span className="text-xs font-bold text-indigo-400 tracking-wider uppercase">
+                <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 tracking-wider uppercase">
                   {prompt.category}
                 </span>
                 <button
                   type="button"
                   onClick={() => toggleFavorite(prompt.id, prompt.title)}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 text-neutral-200 text-xs font-semibold transition-all active:scale-95"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200 text-xs font-semibold shadow-xs transition-all active:scale-95"
                 >
                   <Heart className={`w-4 h-4 ${favorited ? 'fill-rose-500 text-rose-500' : 'text-neutral-400'}`} />
                   <span>{favorited ? 'Favorited' : 'Add to Favorites'}</span>
                 </button>
               </div>
 
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-neutral-900 dark:text-white tracking-tight">
                 {prompt.title}
               </h1>
             </div>
@@ -214,16 +214,16 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
             {/* Full Prompt Container */}
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                <label className="text-xs font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
                   Prompt Text
                 </label>
-                <span className="text-xs text-neutral-500 font-mono">
+                <span className="text-xs text-neutral-400 dark:text-neutral-500 font-mono">
                   {prompt.prompt.length} characters
                 </span>
               </div>
 
-              <div className="relative rounded-2xl bg-neutral-950 border border-neutral-800 p-5 font-mono text-sm text-neutral-200 leading-relaxed shadow-inner selection:bg-indigo-500">
+              <div className="relative rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 p-5 font-mono text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed shadow-inner selection:bg-indigo-500">
                 {prompt.prompt}
               </div>
             </div>
@@ -232,10 +232,10 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
             <button
               type="button"
               onClick={handleCopy}
-              className={`w-full py-4 px-6 rounded-2xl font-bold text-base flex items-center justify-center gap-2.5 shadow-2xl transition-all duration-200 active:scale-98 ${
+              className={`w-full py-4 px-6 rounded-2xl font-bold text-base flex items-center justify-center gap-2.5 shadow-lg transition-all duration-200 active:scale-98 ${
                 copied
                   ? 'bg-emerald-500 text-white shadow-emerald-500/30'
-                  : 'bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5'
+                  : 'bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5'
               }`}
             >
               {copied ? (
@@ -253,20 +253,20 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
 
             {/* Metadata Badges */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800">
-                <span className="text-[11px] text-neutral-500 flex items-center gap-1.5 mb-1">
-                  <Cpu className="w-3.5 h-3.5 text-indigo-400" /> Recommended Generator
+              <div className="p-3.5 rounded-2xl bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 shadow-xs">
+                <span className="text-[11px] text-neutral-500 dark:text-neutral-400 flex items-center gap-1.5 mb-1">
+                  <Cpu className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" /> Recommended Generator
                 </span>
-                <span className="text-sm font-semibold text-neutral-200">
+                <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-200">
                   {prompt.modelUsed || 'Midjourney v6.1 / Flux'}
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800">
-                <span className="text-[11px] text-neutral-500 flex items-center gap-1.5 mb-1">
-                  <Calendar className="w-3.5 h-3.5 text-indigo-400" /> Cataloged On
+              <div className="p-3.5 rounded-2xl bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 shadow-xs">
+                <span className="text-[11px] text-neutral-500 dark:text-neutral-400 flex items-center gap-1.5 mb-1">
+                  <Calendar className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" /> Cataloged On
                 </span>
-                <span className="text-sm font-semibold text-neutral-200">
+                <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-200">
                   {new Date(prompt.createdAt).toLocaleDateString(undefined, {
                     month: 'long',
                     day: 'numeric',
@@ -282,9 +282,9 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
                 {prompt.tags.map(tag => (
                   <span
                     key={tag}
-                    className="px-3 py-1.5 rounded-xl text-xs font-medium bg-neutral-900 border border-neutral-800 text-neutral-300 flex items-center gap-1"
+                    className="px-3 py-1.5 rounded-xl text-xs font-medium bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 flex items-center gap-1"
                   >
-                    <Tag className="w-3 h-3 text-neutral-500" />
+                    <Tag className="w-3 h-3 text-neutral-400 dark:text-neutral-500" />
                     {tag}
                   </span>
                 ))}
@@ -296,8 +296,8 @@ export const PromptDetailsPage: React.FC<PromptDetailsPageProps> = ({ promptId }
 
       {/* Related Prompts in Category */}
       {relatedPrompts.length > 0 && (
-        <div className="pt-8 border-t border-neutral-800">
-          <h3 className="text-xl font-bold text-white mb-6">
+        <div className="pt-8 border-t border-neutral-200 dark:border-neutral-800">
+          <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-6">
             Related in {prompt.category}
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

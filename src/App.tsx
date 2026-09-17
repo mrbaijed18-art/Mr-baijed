@@ -23,7 +23,10 @@ import { PromptEditorPage } from './pages/admin/PromptEditorPage';
 import { AdminCategoriesPage } from './pages/admin/AdminCategoriesPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminAnalyticsPage } from './pages/admin/AdminAnalyticsPage';
+import { AdminAdsPage } from './pages/admin/AdminAdsPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
+import { AdSlot } from './components/AdSlot';
+import { AdsterraGlobalScripts } from './components/AdsterraGlobalScripts';
 
 const AppContent: React.FC = () => {
   const { currentPath, navigate } = useRouter();
@@ -122,7 +125,12 @@ const AppContent: React.FC = () => {
       return <AdminAnalyticsPage />;
     }
 
-    // 16. Admin Settings
+    // 16. Admin Ad Manager
+    if (currentPath === '/admin/ads') {
+      return <AdminAdsPage />;
+    }
+
+    // 17. Admin Settings
     if (currentPath === '/admin/settings') {
       return <AdminSettingsPage />;
     }
@@ -130,14 +138,14 @@ const AppContent: React.FC = () => {
     // 404 Fallback
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
-        <h2 className="text-3xl font-extrabold text-white mb-2">404 - Page Not Found</h2>
-        <p className="text-sm text-neutral-400 mb-6">
+        <h2 className="text-3xl font-extrabold text-neutral-900 dark:text-white mb-2">404 - Page Not Found</h2>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-6">
           The prompt or page you are looking for does not exist.
         </p>
         <button
           type="button"
           onClick={() => navigate('/explore')}
-          className="px-5 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-sm"
+          className="px-5 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-sm shadow-md"
         >
           Return to Explore
         </button>
@@ -148,7 +156,13 @@ const AppContent: React.FC = () => {
   const isAdminRoute = currentPath.startsWith('/admin') && currentPath !== '/admin/login';
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-950 text-neutral-100 selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-neutral-50 dark:bg-[#0c0d12] text-neutral-900 dark:text-neutral-100 transition-colors duration-200 selection:bg-indigo-500 selection:text-white">
+      {/* Global Adsterra Scripts (Popunder, Social Bar - safely handled) */}
+      {!isAdminRoute && <AdsterraGlobalScripts />}
+
+      {/* Top Header Banner Ad (hidden on admin dashboard) */}
+      {!isAdminRoute && <AdSlot placement="header_top" />}
+
       {/* Top Navbar */}
       <Navbar />
 
@@ -157,8 +171,14 @@ const AppContent: React.FC = () => {
         {renderRoute()}
       </div>
 
+      {/* Footer Banner Ad (hidden on admin dashboard) */}
+      {!isAdminRoute && <AdSlot placement="footer_banner" />}
+
       {/* Footer (hidden on admin management layout to preserve dashboard focus) */}
       {!isAdminRoute && <Footer />}
+
+      {/* Sticky Bottom Floating Bar Ad (hidden on admin dashboard) */}
+      {!isAdminRoute && <AdSlot placement="sticky_bottom" />}
 
       {/* Mobile Safe Bottom Navigation (hidden on admin dashboard) */}
       {!isAdminRoute && <MobileBottomNav />}
